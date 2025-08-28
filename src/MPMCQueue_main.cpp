@@ -31,13 +31,7 @@ void addRandomToQueue(MPMCQueue<int>& q, int num)
     for (int i = 0; i < maxRunsPerThread; ++i)
     {
         q.push(num);
-        //std::cout << "Pushed item:" << num << '\n';
         std::cout << q;
-        /*if (q.try_push(num))
-        {
-            std::cout << "Pushed item:" << num << '\n';
-        }*/
-        //std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
@@ -48,11 +42,6 @@ void removeItemFromQueue(MPMCQueue<int>& q)
         int popedElement = -1;
         q.pop(popedElement);
         std::cout << q;
-        //std::cout << "Removed item:" << popedElement << '\n';
-        /*if (q.try_pop(popedElement))
-        {
-            std::cout << "Removed item:" << popedElement << '\n';
-        }*/
     }
 }
 
@@ -60,11 +49,12 @@ void singleThreadPushPop(MPMCQueue<int>& q)
 {
     for (size_t i = 0; i < q.getMaxCapacity(); ++i)
     {
-        //q.try_push(static_cast<int>(i));
         q.push(static_cast<int>(i));
-        //q.push_for(static_cast<int>(i),std::chrono::milliseconds(1));
     }
     printQueue(q);
+
+    //Various examples for popping :)
+
     for (size_t i = 0; i < q.getMaxCapacity(); ++i)
     {
         /*int element = -1;
@@ -102,8 +92,7 @@ void singleThreadPushPop(MPMCQueue<int>& q)
 void runPersonsExample()
 {
     std::shared_ptr<Person> orfeas{ std::make_shared<Person>("Orfeas", 31, "Software Dev") };
-    //std::cout << *orfeas.get();
-
+    
     MPMCQueue<std::shared_ptr<Person>> persons(10);
     auto p3 = std::thread([&]()
     {
@@ -172,12 +161,18 @@ void runMultiThreadExample()
 int main()
 {
     
-    //runMultiThreadExample();
+    runMultiThreadExample();
     //runPersonsExample();
 
-    //Single thread push-pop
+    // --- Single thread push pop example ----
+    /*MPMCQueue<int> q{5};
+    singleThreadPushPop(q);*/
+
+    // --- End of single thread push pop example ----
+
+    // --- Closing queue example ---
     //Simulating delayed close to unblock all waiting consumers
-    MPMCQueue<int> q{5};
+    /*MPMCQueue<int> q{5};
     auto pushPop = std::thread([&]()
     {
         singleThreadPushPop(q);
@@ -188,7 +183,9 @@ int main()
         q.close();
     });
     pushPop.join();
-    close.join();
+    close.join();*/
+
+    // --- End of closing queue example ---
     return 0;
 }
 

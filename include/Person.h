@@ -34,7 +34,6 @@ public:
 	Person(Person&& p) noexcept : 
 		m_name{ std::move(p.m_name) }, m_age{ p.m_age }, m_jobTitle{std::move(p.m_jobTitle)}
 	{
-		std::cout << "Move con";
 	}
 
 	//Move operator assignment
@@ -52,7 +51,8 @@ public:
 
 	~Person() 
 	{
-		std::cout << "Deallocating..." << m_name << '\n';
+		//Don't do this :)
+		//std::cout << "Deallocating..." << m_name << '\n';
 	}
 
 	friend std::ostream& operator<<(std::ostream& out, const Person& p)
