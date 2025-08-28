@@ -1,3 +1,5 @@
+#include <functional>
+#include <thread>
 #include <benchmark/benchmark.h>
 #include "MPMCQueue.h"
 
