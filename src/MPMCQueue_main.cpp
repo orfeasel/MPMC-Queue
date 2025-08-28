@@ -9,7 +9,6 @@
 #include <chrono>
 #include "Person.h"
 
-std::mutex mutex;
 int maxRunsPerThread = 15;
 
 void printQueue(const MPMCQueue<int>& q)
@@ -42,6 +41,8 @@ void removeItemFromQueue(MPMCQueue<int>& q)
         int popedElement = -1;
         q.pop(popedElement);
         std::cout << q;
+        //Adding a slight delay in popping to have a nicer output in console
+        std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }
 }
 
