@@ -67,17 +67,34 @@ void singleThreadPushPop(MPMCQueue<int>& q)
     printQueue(q);
     for (size_t i = 0; i < q.getMaxCapacity(); ++i)
     {
-        int element = -1;
+        /*int element = -1;
         q.pop(element);
         if (element!=-1)
         {
             std::cout << "Poped element:" << element << '\n';
             printQueue(q);
-        }
-        /*if (q.try_pop(element))
+        }*/
+
+        // ---- 
+        int element=-1;
+        if (q.try_pop(element))
         {
             std::cout << "Poped element:" << element << '\n';
             printQueue(q);
+        }
+
+        //-----
+        /*auto poppedElement = q.try_pop();
+        if (poppedElement.has_value())
+        {
+            std::cout<<"std::optional popped value:"<<poppedElement.value()<<'\n';
+        }*/
+
+        //-----
+        /*int element=-1;
+        if (q.pop_for(element, std::chrono::seconds(1)))
+        {
+            std::cout<<"pop_for value:"<<element<<'\n';
         }*/
     }
 }

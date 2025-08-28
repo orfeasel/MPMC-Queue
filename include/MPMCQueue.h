@@ -4,6 +4,7 @@
 #include <mutex>
 #include <chrono>
 #include <condition_variable>
+#include <optional>
 
 /**
  * @brief A thread-safe, bounded multi-producer multi-consumer queue.
@@ -191,6 +192,48 @@ public:
 		m_queue.pop_front();
 		
 		return true;
+	}
+
+	/**
+	 * @brief Try to pop an element from the queue (non-blocking) waiting up to WaitTime.
+	 * @param element ref to store the popped element.
+	 * @param WaitTime max duration to wait for popping
+	 */
+	template<class Rep, class Period>
+	bool pop_for(T& element, std::chrono::duration<Rep, Period> WaitTime)
+	{
+		std::unique_lock<std::mutex> lk{ m_mutex };
+
+		if (!m_cv_not_empty.wait_for(lk, WaitTime, [&]()
+		{
+			return m_closed || !m_queue.empty();
+		}))
+		{
+			return false;
+		}
+
+		if (m_queue.empty()) return false;
+
+		element = std::move(m_queue.front());
+		m_queue.pop_front();
+
+		lk.unlock();
+		m_cv_not_full.notify_one();
+		return true;
+	}
+
+	/**
+	 * @brief Try to pop an element from the queue (non-blocking) using std optional.
+	 * Less performance compared to bool try_pop due to the extra copy inside the optional variable
+	 * @return the popped element - make sure to check for .has_value() before accessing
+	 */
+	std::optional<T> try_pop()
+	{
+		std::scoped_lock lk {m_mutex};
+		if(m_queue.empty()) return std::nullopt;
+		std::optional<T> out{std::in_place,std::move(m_queue.front())};
+		m_queue.pop_front();
+		return out;
 	}
 
 	/**
