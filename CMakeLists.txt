@@ -4,25 +4,6 @@ project(MPMCQueue LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ---- Library (your code) ----
-# List sources explicitly (best for clarity)
-# set(YOURLIB_SOURCES
-#   src/MPMCQueue_main.cpp
-# )
-# set(YOURLIB_PUBLIC_HEADERS
-#   include/MPMCQueue.h
-#   include/Person.h
-# )
-
-# add_library(yourlib ${YOURLIB_SOURCES} ${YOURLIB_PUBLIC_HEADERS})
-# add_library(yourlib::yourlib ALIAS yourlib)
-
-# target_include_directories(yourlib
-#   PUBLIC
-#     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#     $<INSTALL_INTERFACE:include>
-# )
-
 # ---- Header-only library (all headers under include/) ----
 add_library(mpmcqueue INTERFACE)
 target_include_directories(mpmcqueue INTERFACE
